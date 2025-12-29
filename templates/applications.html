@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Applications - Job Assistant{% endblock %}
+
+{% block content %}
+<h1>📋 Your Applications</h1>
+
+{% if applications %}
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Position</th>
+            <th>Company</th>
+            <th>Location</th>
+            <th>Applied Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for app in applications %}
+        <tr>
+            <td>{{ app.id }}</td>
+            <td><strong>{{ app.position }}</strong></td>
+            <td>{{ app.company }}</td>
+            <td>{{ app.location or '-' }}</td>
+            <td>{{ app.date_applied[:10] if app.date_applied else '-' }}</td>
+            <td>
+                {% if app.status == 'pending' %}⏳{% endif %}
+                {% if app.status == 'applied' %}📤{% endif %}
+                {% if app.status == 'interview' %}🎤{% endif %}
+                {% if app.status == 'rejected' %}❌{% endif %}
+                {% if app.status == 'offer' %}🎉{% endif %}
+                {% if app.status == 'accepted' %}✅{% endif %}
+                {{ app.status }}
+            </td>
+            <td>
+                <a href="/application/{{ app.id }}" class="btn btn-secondary" style="padding: 0.25rem 0.5rem;">View</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No applications yet. Start applying to jobs!</p>
+{% endif %}
+{% endblock %}

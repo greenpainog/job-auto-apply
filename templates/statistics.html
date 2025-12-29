@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Statistics - Job Assistant{% endblock %}
+
+{% block content %}
+<h1>📈 Application Statistics</h1>
+
+<div class="grid">
+    <div class="stat-box">
+        <div class="stat-number">{{ stats.total }}</div>
+        <div class="stat-label">Total Applications</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-number">{{ stats.this_week }}</div>
+        <div class="stat-label">This Week</div>
+    </div>
+</div>
+
+{% if stats.by_status %}
+<div style="margin-top: 2rem;">
+    <h2>Applications by Status</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Status</th>
+                <th>Count</th>
+                <th>Percentage</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for status, count in stats.by_status %}
+            <tr>
+                <td>
+                    {% if status == 'pending' %}⏳{% endif %}
+                    {% if status == 'applied' %}📤{% endif %}
+                    {% if status == 'interview' %}🎤{% endif %}
+                    {% if status == 'rejected' %}❌{% endif %}
+                    {% if status == 'offer' %}🎉{% endif %}
+                    {% if status == 'accepted' %}✅{% endif %}
+                    {{ status|capitalize }}
+                </td>
+                <td>{{ count }}</td>
+                <td>{{ "%.1f"|format((count / stats.total * 100) if stats.total > 0 else 0) }}%</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if by_month %}
+<div style="margin-top: 2rem;">
+    <h2>Applications by Month</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Month</th>
+                <th>Applications</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for month, count in by_month.items() %}
+            <tr>
+                <td>{{ month }}</td>
+                <td>{{ count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

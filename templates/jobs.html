@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Jobs - Job Assistant{% endblock %}
+
+{% block content %}
+<h1>💼 Job Management</h1>
+
+<div style="margin: 2rem 0;">
+    <a href="/add_job" class="btn">➕ Add New Job</a>
+</div>
+
+{% if jobs %}
+<div style="margin-top: 2rem;">
+    <h2>Saved Jobs ({{ jobs|length }} total)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Position</th>
+                <th>Company</th>
+                <th>Location</th>
+                <th>Type</th>
+                <th>Date Added</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td><strong>{{ job.title }}</strong></td>
+                <td>{{ job.company }}</td>
+                <td>{{ job.location or '-' }}</td>
+                <td>{{ job.job_type or '-' }}</td>
+                <td>{{ job.date_found[:10] if job.date_found else '-' }}</td>
+                <td>
+                    {% if job.url %}
+                    <a href="{{ job.url }}" target="_blank" class="btn btn-secondary" style="padding: 0.25rem 0.5rem;">View</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>No jobs saved yet. Add your first job!</p>
+{% endif %}
+{% endblock %}

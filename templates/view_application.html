@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Application Details - Job Assistant{% endblock %}
+
+{% block content %}
+<h1>📋 Application Details</h1>
+
+<div class="card">
+    <h2>{{ app.position }} at {{ app.company }}</h2>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1rem;">
+        <div>
+            <p><strong>Status:</strong> 
+                {% if app.status == 'pending' %}⏳{% endif %}
+                {% if app.status == 'applied' %}📤{% endif %}
+                {% if app.status == 'interview' %}🎤{% endif %}
+                {% if app.status == 'rejected' %}❌{% endif %}
+                {% if app.status == 'offer' %}🎉{% endif %}
+                {% if app.status == 'accepted' %}✅{% endif %}
+                {{ app.status|capitalize }}
+            </p>
+            <p><strong>Applied:</strong> {{ app.date_applied[:16] if app.date_applied else 'Unknown' }}</p>
+            <p><strong>Location:</strong> {{ app.location or 'Not specified' }}</p>
+        </div>
+        <div>
+            <p><strong>Type:</strong> {{ app.job_type or 'Not specified' }}</p>
+            <p><strong>Salary:</strong> {{ app.salary_range or 'Not specified' }}</p>
+            <p><strong>Application ID:</strong> #{{ app.id }}</p>
+        </div>
+    </div>
+    
+    {% if app.job_url %}
+    <div style="margin-top: 1rem;">
+        <a href="{{ app.job_url }}" target="_blank" class="btn">🔗 View Job Posting</a>
+    </div>
+    {% endif %}
+</div>
+
+<div style="margin-top: 2rem;">
+    <h3>Update Status</h3>
+    <form action="/update_status/{{ app.id }}" method="POST" style="display: flex; gap: 1rem; align-items: center;">
+        <select name="status" style="padding: 0.5rem;">
+            <option value="pending" {% if app.status == 'pending' %}selected{% endif %}>⏳ Pending</option>
+            <option value="applied" {% if app.status == 'applied' %}selected{% endif %}>📤 Applied</option>
+            <option value="interview" {% if app.status == 'interview' %}selected{% endif %}>🎤 Interview</option>
+            <option value="rejected" {% if app.status == 'rejected' %}selected{% endif %}>❌ Rejected</option>
+            <option value="offer" {% if app.status == 'offer' %}selected{% endif %}>🎉 Offer</option>
+            <option value="accepted" {% if app.status == 'accepted' %}selected{% endif %}>✅ Accepted</option>
+        </select>
+        <button type="submit" class="btn" style="padding: 0.5rem 1rem;">Update Status</button>
+    </form>
+</div>
+
+{% if app.notes %}
+<div style="margin-top: 2rem;">
+    <h3>📝 Notes</h3>
+    <div class="card">{{ app.notes }}</div>
+</div>
+{% endif %}
+
+{% if cover_letter %}
+<div style="margin-top: 2rem;">
+    <h3>📄 Generated Cover Letter</h3>
+    <div class="card" style="background: white; padding: 2rem; border: 1px solid #e2e8f0;">
+        <pre id="cover-letter-content" style="white-space: pre-wrap; font-family: inherit;">{{ cover_letter }}</pre>
+    </div>
+    <button onclick="copyText('cover-letter-content')" class="btn btn-secondary" style="margin-top: 1rem;">📋 Copy Cover Letter</button>
+</div>
+{% endif %}
+
+{% if resume %}
+<div style="margin-top: 2rem;">
+    <h3>📄 Tailored Resume</h3>
+    <div class="card" style="background: white; padding: 2rem; border: 1px solid #e2e8f0;">
+        <pre id="resume-content" style="white-space: pre-wrap; font-family: inherit;">{{ resume }}</pre>
+    </div>
+    <button onclick="copyText('resume-content')" class="btn btn-secondary" style="margin-top: 1rem;">📋 Copy Resume</button>
+</div>
+{% endif %}
+
+<div style="margin-top: 2rem; padding: 1rem; background: #f7fafc; border-radius: 8px;">
+    <h4>💡 Next Steps:</h4>
+    <ol style="margin-left: 1.5rem; line-height: 1.8;">
+        <li>Copy the tailored resume and cover letter</li>
+        <li>Apply through the company's website</li>
+        <li>Update the status to "Applied"</li>
+        <li>Set a reminder to follow up in 1 week</li>
+    </ol>
+</div>
+
+<script>
+function copyText(elementId) {
+    // Get the text from the element
+    const element = document.getElementById(elementId);
+    const text = element.textContent || element.innerText;
+    
+    // Create temporary textarea
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'absolute';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    
+    // Select and copy
+    textarea.select();
+    textarea.setSelectionRange(0, 99999); // For mobile devices
+    
+    try {
+        document.execCommand('copy');
+        alert('Copied to clipboard! 📋');
+    } catch (err) {
+        alert('Failed to copy text');
+    }
+    
+    // Clean up
+    document.body.removeChild(textarea);
+}
+</script>
+{% endblock %}

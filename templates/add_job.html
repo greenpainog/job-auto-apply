@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Add Job - Job Assistant{% endblock %}
+
+{% block content %}
+<h1>➕ Add New Job</h1>
+
+<form action="/add_job" method="POST">
+    <div class="form-group">
+        <label for="title">Job Title *</label>
+        <input type="text" name="title" id="title" required placeholder="e.g., Python Developer">
+    </div>
+    
+    <div class="form-group">
+        <label for="company">Company *</label>
+        <input type="text" name="company" id="company" required placeholder="e.g., Tech Corp">
+    </div>
+    
+    <div class="form-group">
+        <label for="location">Location</label>
+        <input type="text" name="location" id="location" placeholder="e.g., New York, NY">
+    </div>
+    
+    <div class="form-group">
+        <label for="url">Job URL</label>
+        <input type="url" name="url" id="url" placeholder="https://...">
+    </div>
+    
+    <div class="form-group">
+        <label for="job_type">Job Type</label>
+        <select name="job_type" id="job_type">
+            <option value="">-- Select --</option>
+            <option value="remote">Remote</option>
+            <option value="hybrid">Hybrid</option>
+            <option value="onsite">On-site</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label for="salary">Salary Range</label>
+        <input type="text" name="salary" id="salary" placeholder="e.g., $80k-$120k">
+    </div>
+    
+    <div class="form-group">
+        <label for="description">Job Description</label>
+        <textarea name="description" id="description" rows="6" placeholder="Job requirements and description..."></textarea>
+    </div>
+    
+    <button type="submit" class="btn">💾 Save Job</button>
+    <a href="/jobs" class="btn btn-secondary">Cancel</a>
+</form>
+{% endblock %}

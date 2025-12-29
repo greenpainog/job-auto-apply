@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Application Details - Job Assistant{% endblock %}
+
+{% block content %}
+<h1>Application Details</h1>
+
+<div class="card">
+    <h2>{{ app.position }} at {{ app.company }}</h2>
+    <p><strong>Status:</strong> {{ app.status }}</p>
+    <p><strong>Applied:</strong> {{ app.date_applied[:10] if app.date_applied else 'Unknown' }}</p>
+    <p><strong>Location:</strong> {{ app.location or 'Not specified' }}</p>
+    <p><strong>Type:</strong> {{ app.job_type or 'Not specified' }}</p>
+    <p><strong>Salary:</strong> {{ app.salary_range or 'Not specified' }}</p>
+    
+    {% if app.job_url %}
+    <p><a href="{{ app.job_url }}" target="_blank" class="btn" style="margin-top: 1rem;">🔗 View Job Posting</a></p>
+    {% endif %}
+</div>
+
+<div style="margin-top: 2rem;">
+    <h3>Update Status</h3>
+    <form action="/update_status/{{ app.id }}" method="POST" style="display: flex; gap: 1rem; align-items: center;">
+        <select name="status">
+            <option value="pending" {% if app.status == 'pending' %}selected{% endif %}>⏳ Pending</option>
+            <option value="applied" {% if app.status == 'applied' %}selected{% endif %}>📤 Applied</option>
+            <option value="interview" {% if app.status == 'interview' %}selected{% endif %}>🎤 Interview</option>
+            <option value="rejected" {% if app.status == 'rejected' %}selected{% endif %}>❌ Rejected</option>
+            <option value="offer" {% if app.status == 'offer' %}selected{% endif %}>🎉 Offer</option>
+            <option value="accepted" {% if app.status == 'accepted' %}selected{% endif %}>✅ Accepted</option>
+        </select>
+        <button type="submit" class="btn">Update</button>
+    </form>
+</div>
+
+{% if cover_letter %}
+<div style="margin-top: 2rem;">
+    <h3>Generated Cover Letter</h3>
+    <div class="card" style="white-space: pre-wrap;">{{ cover_letter }}</div>
+</div>
+{% endif %}
+
+{% if resume %}
+<div style="margin-top: 2rem;">
+    <h3>Tailored Resume</h3>
+    <div class="card" style="white-space: pre-wrap;">{{ resume }}</div>
+</div>
+{% endif %}
+{% endblock %}

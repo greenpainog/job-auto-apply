@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - Job Assistant{% endblock %}
+
+{% block content %}
+<h1>Welcome to Your Job Application Dashboard! 🎯</h1>
+
+<div class="grid">
+    <div class="stat-box">
+        <div class="stat-number">{{ stats.total }}</div>
+        <div class="stat-label">Total Applications</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-number">{{ stats.this_week }}</div>
+        <div class="stat-label">This Week</div>
+    </div>
+    <div class="stat-box">
+        <div class="stat-number">{{ stats.by_status|length }}</div>
+        <div class="stat-label">Active Pipelines</div>
+    </div>
+</div>
+
+<div style="margin-top: 2rem;">
+    <h2>Quick Actions</h2>
+    <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+        <a href="/apply" class="btn">🚀 Apply to Job</a>
+        <a href="/resumes" class="btn btn-secondary">📄 Manage Resumes</a>
+        <a href="/jobs" class="btn btn-secondary">💼 Add Job</a>
+    </div>
+</div>
+
+<div style="margin-top: 2rem;">
+    <h2>Recent Applications</h2>
+    {% if recent_apps %}
+        {% for app in recent_apps %}
+        <div class="card">
+            <h3>{{ app.position }} at {{ app.company }}</h3>
+            <p>📅 Applied: {{ app.date_applied[:10] if app.date_applied else 'Unknown' }}</p>
+            <p>📊 Status: <strong>{{ app.status }}</strong></p>
+            <a href="/application/{{ app.id }}" class="btn" style="margin-top: 0.5rem; padding: 0.5rem 1rem;">View Details</a>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No applications yet. Start applying!</p>
+    {% endif %}
+</div>
+{% endblock %}

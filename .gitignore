@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+pyvenv.cfg
+
+# Environment
+.env
+
+# Data / outputs (sensitive)
+data/
+*.db
+*.json
+*.png
+*.pdf
+
+# Resumes / uploads (PII)
+data/resumes/
+data/uploads/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store

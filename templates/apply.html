@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Apply to Job - Job Assistant{% endblock %}
+
+{% block content %}
+<h1>🚀 Apply to a Job</h1>
+
+<form action="/apply" method="POST">
+    <div class="form-group">
+        <label for="resume_id">Select Resume *</label>
+        <select name="resume_id" id="resume_id" required>
+            <option value="">-- Choose a resume --</option>
+            {% for resume in resumes %}
+            <option value="{{ resume.id }}" {% if resume.is_default %}selected{% endif %}>
+                {{ resume.name }} {% if resume.is_default %}(Default){% endif %}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label for="company">Company *</label>
+        <input type="text" name="company" id="company" required placeholder="e.g., Google">
+    </div>
+    
+    <div class="form-group">
+        <label for="position">Position *</label>
+        <input type="text" name="position" id="position" required placeholder="e.g., Software Engineer">
+    </div>
+    
+    <div class="form-group">
+        <label for="job_url">Job URL</label>
+        <input type="url" name="job_url" id="job_url" placeholder="https://...">
+    </div>
+    
+    <div class="form-group">
+        <label for="location">Location</label>
+        <input type="text" name="location" id="location" placeholder="e.g., San Francisco, CA or Remote">
+    </div>
+    
+    <div class="form-group">
+        <label for="job_type">Job Type</label>
+        <select name="job_type" id="job_type">
+            <option value="">-- Select --</option>
+            <option value="remote">Remote</option>
+            <option value="hybrid">Hybrid</option>
+            <option value="onsite">On-site</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label for="salary">Salary Range</label>
+        <input type="text" name="salary" id="salary" placeholder="e.g., $80k-$120k">
+    </div>
+    
+    <div class="form-group">
+        <label for="job_description">Job Description (for AI tailoring)</label>
+        <textarea name="job_description" id="job_description" rows="8" placeholder="Paste the job description here for AI-powered resume tailoring..."></textarea>
+    </div>
+    
+    <button type="submit" class="btn">🎯 Generate Application</button>
+</form>
+
+{% if jobs %}
+<div style="margin-top: 3rem;">
+    <h2>Or Select from Saved Jobs</h2>
+    <div style="margin-top: 1rem;">
+        {% for job in jobs[:5] %}
+        <div class="card">
+            <h3>{{ job.title }} at {{ job.company }}</h3>
+            <p>📍 {{ job.location }}</p>
+            <button type="button" 
+                    data-company="{{ job.company or '' }}"
+                    data-title="{{ job.title or '' }}"
+                    data-url="{{ job.url or '' }}"
+                    data-location="{{ job.location or '' }}"
+                    data-jobtype="{{ job.job_type or '' }}"
+                    data-salary="{{ job.salary or '' }}"
+                    data-description="{{ job.description or '' }}"
+                    onclick="fillFromJob(this)" 
+                    class="btn btn-secondary" 
+                    style="margin-top: 0.5rem;">
+                Use This Job
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+function fillFromJob(button) {
+    // Get data from button attributes
+    document.getElementById('company').value = button.getAttribute('data-company');
+    document.getElementById('position').value = button.getAttribute('data-title');
+    document.getElementById('job_url').value = button.getAttribute('data-url');
+    document.getElementById('location').value = button.getAttribute('data-location');
+    document.getElementById('job_type').value = button.getAttribute('data-jobtype');
+    document.getElementById('salary').value = button.getAttribute('data-salary');
+    document.getElementById('job_description').value = button.getAttribute('data-description');
+    
+    // Scroll to top of form
+    window.scrollTo(0, 0);
+}
+</script>
+{% endif %}
+{% endblock %}
